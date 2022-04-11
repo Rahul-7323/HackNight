@@ -5,6 +5,18 @@ import dynamic from 'next/dynamic'
 import { css } from '@emotion/css'
 import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
+// import got from 'got'
+
+const { Keyring } = require('@polkadot/keyring')
+
+const seeds = 'wf08w9mv89w8w09q0e9ur'
+
+const keyring = new Keyring();
+const pair = keyring.addFromUri(seeds);
+const sig = pair.sign(pair.address);
+const sigHex = '0x' + Buffer.from(sig).toString('hex');
+
+const authHeader = Buffer.from(`sub-${pair.address}:${sigHex}`).toString('base64');
 
 /* import contract address and contract owner address */
 import {
@@ -91,6 +103,39 @@ function CreatePost() {
     const uploadedFile = e.target.files[0]
     if (!uploadedFile) return
     const added = await client.add(uploadedFile)
+    const cid = added.cid;
+
+    const ipfsPinningService = 'https://pin.crustcode.com/psa';
+
+    // const { body } = await got.post(
+    //   ipfsPinningService + '/pins',
+    //   {
+    //     // headers: {
+    //     //   authorization: 'Bearer ' + authHeader
+    //     // },
+    //     json: {
+    //       cid: cid.toV0().toString(),
+    //       name: 'crust-rahul'
+    //     }
+    //   }
+    // );
+    // console.log(body);
+
+    const resp = await fetch(ipfsPinningService + '/pins', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + authHeader,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cid: cid.toV0().toString(),
+        name: 'crust-rahul'
+      })
+    })
+      .then(resp => resp.json());
+
+    console.log(resp);
+
     setPost(state => ({ ...state, coverImage: added.path }))
     setImage(uploadedFile)
   }
@@ -99,7 +144,7 @@ function CreatePost() {
     <div className={container}>
       {
         image && (
-          <img className={coverImageStyle} src={URL.createObjectURL(image)} />
+          <a className={coverImageStyle} href={URL.createObjectURL(image)}>File Link</a>
         )
       }
       <input
@@ -126,7 +171,7 @@ function CreatePost() {
             <button
               onClick={triggerOnChange}
               className={button}
-            >Add cover image</button>
+            >Add File to IPFS</button>
           </>
         )
       }

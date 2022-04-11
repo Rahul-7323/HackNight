@@ -109,10 +109,7 @@ export default function Post() {
           <div>
             {
               post.coverImagePath && (
-                <img
-                  src={post.coverImagePath}
-                  className={coverImageStyle}
-                />
+                <a href={post.coverImagePath} className={coverImageStyle}>File Link</a>
               )
             }
             <h1>{post.title}</h1>

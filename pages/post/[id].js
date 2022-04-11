@@ -44,10 +44,10 @@ export default function Post({ post }) {
             {
               /* if the post has a cover image, render it */
               post.coverImage && (
-                <img
-                  src={post.coverImage}
+                <a
+                  href={post.coverImage}
                   className={coverImageStyle}
-                />
+                >File Link</a>
               )
             }
             <h1>{post.title}</h1>
