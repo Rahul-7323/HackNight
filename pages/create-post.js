@@ -5,18 +5,8 @@ import dynamic from 'next/dynamic'
 import { css } from '@emotion/css'
 import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
+import placeStorageOrder from '../scripts/placeStorageOrder'
 // import got from 'got'
-
-const { Keyring } = require('@polkadot/keyring')
-
-const seeds = 'wf08w9mv89w8w09q0e9ur'
-
-const keyring = new Keyring();
-const pair = keyring.addFromUri(seeds);
-const sig = pair.sign(pair.address);
-const sigHex = '0x' + Buffer.from(sig).toString('hex');
-
-const authHeader = Buffer.from(`sub-${pair.address}:${sigHex}`).toString('base64');
 
 /* import contract address and contract owner address */
 import {
@@ -102,42 +92,20 @@ function CreatePost() {
     /* upload cover image to ipfs and save hash to state */
     const uploadedFile = e.target.files[0]
     if (!uploadedFile) return
-    const added = await client.add(uploadedFile)
-    const cid = added.cid;
+    const { cid } = await client.add(uploadedFile);
+    // const fileStat = await client.files.stat("/ipfs/" + cid.path);
 
-    const ipfsPinningService = 'https://pin.crustcode.com/psa';
+    const fileCid = cid.toV0().toString();
 
-    // const { body } = await got.post(
-    //   ipfsPinningService + '/pins',
-    //   {
-    //     // headers: {
-    //     //   authorization: 'Bearer ' + authHeader
-    //     // },
-    //     json: {
-    //       cid: cid.toV0().toString(),
-    //       name: 'crust-rahul'
-    //     }
-    //   }
-    // );
-    // console.log(body);
+    placeStorageOrder(fileCid, 2 * 1024 * 1024 * 1024);
 
-    const resp = await fetch(ipfsPinningService + '/pins', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + authHeader,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        cid: cid.toV0().toString(),
-        name: 'crust-rahul'
-      })
-    })
-      .then(resp => resp.json());
+    console.log(cid.path);
+    // console.log(fileStat.cumulativeSize);
 
-    console.log(resp);
+    // placeStorageOrder(cid.)
 
-    setPost(state => ({ ...state, coverImage: added.path }))
-    setImage(uploadedFile)
+    setPost(state => ({ ...state, coverImage: cid.path }))
+    setImage(uploadedFile);
   }
 
   return (
