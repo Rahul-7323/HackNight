@@ -25,7 +25,7 @@ export default function Post({ post }) {
   }
 
   return (
-    <div>
+    <div className={postContainer}>
       {
         post && (
           <div className={container}>
@@ -35,7 +35,7 @@ export default function Post({ post }) {
                 <div className={editPost}>
                   <Link href={`/edit-post/${id}`}>
                     <a>
-                      Edit post
+                      Edit
                     </a>
                   </Link>
                 </div>
@@ -106,21 +106,29 @@ export async function getStaticProps({ params }) {
   }
 }
 
+const postContainer = css`
+  color: white;
+`
+
 const editPost = css`
   margin: 20px 0px;
 `
 
 const coverImageStyle = css`
-  width: 900px;
+  text-decoration: underline;
 `
 
 const container = css`
-  width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  text-align: center; 
+  background-color: white;
+  color: black;
+  padding: 10px 0px;
+  margin: 0px 20px;
+  border-radius: 20px;
 `
 
 const contentContainer = css`
-  margin-top: 60px;
   padding: 0px 40px;
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;

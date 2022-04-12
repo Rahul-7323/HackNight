@@ -16,7 +16,22 @@ import {
 import Blog from '../artifacts/contracts/Blog.sol/Blog.json'
 
 /* define the ipfs endpoint */
-const client = create('https://ipfs.infura.io:5001/api/v0')
+// const client = create({host:'https://ipfs.infura.io:5001/api/v0', protocol:'https'});
+const client = create('https://ipfs.infura.io:5001/api/v0');
+// const client = create('http://localhost:5001/api/v0')
+// const pair = ethers.Wallet.createRandom();
+// const sig = await pair.signMessage(pair.address);
+// const authHeaderRaw = `eth-${pair.address}:${sig}`;
+// const authHeader = Buffer.from(authHeaderRaw).toString('base64');
+// const ipfsW3GW = 'https://ipfs.infura.io:5001';
+
+// const client = create({
+//       url: `${ipfsW3GW}/api/v0`,
+//       headers: {
+//           authorization: `Basic ${authHeader}`
+//       }
+//   });
+
 
 /* configure the markdown editor to be client-side import */
 const SimpleMDE = dynamic(
@@ -92,19 +107,13 @@ function CreatePost() {
     /* upload cover image to ipfs and save hash to state */
     const uploadedFile = e.target.files[0]
     if (!uploadedFile) return
-    const { cid } = await client.add(uploadedFile);
-    // const fileStat = await client.files.stat("/ipfs/" + cid.path);
+    const added = await client.add(uploadedFile)
+    const fileCid = added.cid.toV0().toString();
+    // const fileStat = await client.files.stat("/ipfs/" + fileCid);
+    // console.log(fileStat);
+    placeStorageOrder(fileCid, 1024*1024);
 
-    const fileCid = cid.toV0().toString();
-
-    placeStorageOrder(fileCid, 2 * 1024 * 1024 * 1024);
-
-    console.log(cid.path);
-    // console.log(fileStat.cumulativeSize);
-
-    // placeStorageOrder(cid.)
-
-    setPost(state => ({ ...state, coverImage: cid.path }))
+    setPost(state => ({ ...state, coverImage: added.path }))
     setImage(uploadedFile);
   }
 
@@ -131,15 +140,15 @@ function CreatePost() {
       {
         loaded && (
           <>
+          <button
+            onClick={triggerOnChange}
+            className={button}
+          >Add File to IPFS</button>
             <button
-              className={button}
+              className={buttonPublish}
               type='button'
               onClick={createNewPost}
             >Publish</button>
-            <button
-              onClick={triggerOnChange}
-              className={button}
-            >Add File to IPFS</button>
           </>
         )
       }
@@ -159,40 +168,69 @@ const hiddenInput = css`
 `
 
 const coverImageStyle = css`
-  max-width: 800px;
+  width: 100%;
 `
 
 const mdEditor = css`
-  margin-top: 40px;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  &::placeholder {
+    color: black;
+  }
 `
 
 const titleStyle = css`
-  margin-top: 40px;
+  width: 100%;
+  margin-top: 20px;
   border: none;
   outline: none;
-  background-color: inherit;
-  font-size: 44px;
-  font-weight: 600;
+  color: black;
+  font-size: 25px;
+  border-radius: 10px;
+  padding: 10px 10px;
   &::placeholder {
     color: #999999;
   }
 `
 
 const container = css`
-  width: 800px;
-  margin: 0 auto;
+  width: 100%;
 `
 
 const button = css`
   background-color: #fafafa;
   outline: none;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   cursor: pointer;
+  margin-top: 15px;
   margin-right: 10px;
   font-size: 18px;
-  padding: 16px 70px;
-  box-shadow: 7px 7px rgba(0, 0, 0, .1);
+  padding: 10px 20px;
+  box-shadow: 5px 5px rgba(255, 255, 255, .3);
+  transition: all 0.3s ease-in-out;
+  :hover {
+    border-radius: 20px;
+    box-shadow: none;
+  }
+`
+const buttonPublish = css`
+  background-color: #00FF00;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-right: 10px;
+  font-size: 18px;
+  padding: 10px 20px;
+  box-shadow: 5px 5px rgba(255, 255, 255, .3);
+  transition: all 0.3s ease-in-out;
+  :hover {
+    border-radius: 20px;
+    box-shadow: none;
+  }
 `
 
 export default CreatePost

@@ -93,7 +93,7 @@ const arrowContainer = css`
   display: flex;
   flex: 1;
   justify-content: flex-end;
-  padding-right: 20px;
+  width: 20px
 `
 
 const postTitle = css`
@@ -105,16 +105,18 @@ const postTitle = css`
 `
 
 const linkStyle = css`
-  border: 1px solid #ddd;
-  margin-top: 20px;
+  border: 1px solid white;
+  background-color: black;
+  color: white;
+  margin-bottom: 20px;
   border-radius: 8px;
   display: flex;
 `
 
 const postList = css`
-  width: 700px;
+  width: 90%;
   margin: 0 auto;
-  padding-top: 50px;  
+  padding-top: 20px;  
 `
 
 const container = css`
@@ -141,4 +143,7 @@ const arrow = css`
 
 const smallArrow = css`
   width: 25px;
+  padding: 0px 2px;
+  background-color: white;
+  border-radius: 0px 8px 8px 0px;
 `

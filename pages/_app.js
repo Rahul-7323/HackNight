@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* pages/__app.js */
 import '../styles/globals.css'
 import { useState } from 'react'
@@ -48,18 +49,9 @@ function MyApp({ Component, pageProps }) {
         <div className={header}>
           <Link href="/">
             <a>
-              <img
-                src='/logo.svg'
-                alt="React Logo"
-                style={{ width: '50px' }}
-              />
-            </a>
-          </Link>
-          <Link href="/">
-            <a>
               <div className={titleContainer}>
-                <h2 className={title}>Full Stack</h2>
-                <p className={description}>WEB3</p>
+                <h2 className={title}>Mongrove</h2>
+                {/* <p className={description}>WEB3</p> */}
               </div>
             </a>
           </Link>
@@ -108,6 +100,7 @@ const accountInfo = css`
   flex: 1;
   justify-content: flex-end;
   font-size: 12px;
+  color: white;
 `
 
 const container = css`
@@ -115,18 +108,24 @@ const container = css`
 `
 
 const linkContainer = css`
-  padding: 30px 60px;
-  background-color: #fafafa;
+  padding: 10px 60px;
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 `
 
 const nav = css`
-  background-color: white;
+  background-color: #111;
 `
 
 const header = css`
   display: flex;
+  align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, .075);
-  padding: 20px 30px;
+  padding: 5px 30px;
 `
 
 const description = css`
@@ -136,6 +135,8 @@ const description = css`
 
 const titleContainer = css`
   display: flex;
+  justify-contents: center;
+  align-items: center;
   flex-direction: column;
   padding-left: 15px;
 `
@@ -143,31 +144,34 @@ const titleContainer = css`
 const title = css`
   margin-left: 30px;
   font-weight: 500;
+  color: white;
   margin: 0;
 `
 
 const buttonContainer = css`
-  width: 100%;
+  // width: 100%;
   display: flex;
   flex: 1;
   justify-content: flex-end;
 `
 
 const buttonStyle = css`
-  background-color: #fafafa;
+  background-color: #00FF00;
   outline: none;
   border: none;
-  font-size: 18px;
-  padding: 16px 70px;
-  border-radius: 15px;
+  border: 2px solid white;
+  font-size: 15px;
+  padding: 6px 10px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 7px 7px rgba(0, 0, 0, .1);
+  // box-shadow: 7px 7px rgba(0, 0, 0, .1);
 `
 
 const link = css`
   margin: 0px 40px 0px 0px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
+  color: white;
 `
 
 export default MyApp
